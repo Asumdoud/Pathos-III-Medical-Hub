@@ -1,5 +1,5 @@
 ---
-title: Medical Department Registry
+title: Pathos III Medical Hub
 description: This site holds all patient records, SCP records, and other useful tools/links.
 template: splash
 hero:
@@ -15,23 +15,47 @@ hero:
       icon: external
       variant: minimal
 ---
-
+import AppointmentForm from '../../components/AppointmentForm.astro';
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
 ## Next steps
 
 <CardGrid stagger>
 	<Card title="Certified Evaluations" icon="approve-check-circle">
-		Only evaluations that have scored full points will be placed into the database.
+		Only evaluations that have scored full points will be placed into the database to ensure quality standards.
 	</Card>
 	<Card title="Discuss and Advise Further Treatment" icon="comment">
 		MD will be able to easily Discuss patient reccords and refrence them in other logs. 
 		This will allow patients to be logged and given a history, in turn, allowing for further advised treament plans.
 	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
+	<Card title="Book Appointments" icon="open-book">
+		Pathos III personnel are able to scedule events with MD members to start a line of medical care.
+		This system will also doctors to reccomend consults and allow for follow up events with patients.
 	</Card>
 	<Card title="Read the docs" icon="open-book">
 		Learn more in [the Starlight Docs](https://starlight.astro.build/).
 	</Card>
 </CardGrid>
+
+<div class="centered-dashboard">
+
+  <div class="section-header">
+    ## Schedule an Appointment
+  </div>
+
+  <div class="form-container">
+    <AppointmentForm />
+  </div>
+
+  <div class="calendar-container">
+    <iframe 
+      src="https://calendar.google.com/calendar/embed?src=e4f5d210351a9bcd4f99bc45d103437b59b16968c5e2fb9c9434ba653319d664@group.calendar.google.com&ctz=America%2FNew_York&wkst=1&bgcolor=%23ffffff&showTitle=0&showPrint=0&showTabs=0&showCalendars=0" 
+      style="border: 0" 
+      width="100%" 
+      height="100%" 
+      frameborder="0" 
+      scrolling="no">
+    </iframe>
+  </div>
+
+</div>
