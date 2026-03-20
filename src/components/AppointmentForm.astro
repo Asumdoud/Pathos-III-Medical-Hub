@@ -1,0 +1,161 @@
+---
+// src/components/AppointmentForm.astro
+---
+
+<form id="appointmentForm" class="native-form">
+  <div class="field">
+    <label for="roblox">Roblox Username</label>
+    <input type="text" id="roblox" name="roblox" required />
+  </div>
+
+  <div class="field">
+    <label for="discord">Discord Username</label>
+    <input type="text" id="discord" name="discord" required />
+  </div>
+
+  <div class="field">
+    <label for="type">What type of event</label>
+    <select id="type" name="type">
+      <option value="Psychology">Psychology</option>
+      <option value="General Medicine">General Medicine</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="time">Date & Time</label>
+    <input type="datetime-local" id="time" name="time" required />
+  </div>
+
+  <button type="submit">Book Appointment</button>
+</form>
+
+<style>
+  /* 1. Target the form itself */
+  .native-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    
+    /* Force the width */
+    width: 100% !important;
+    max-width: 1200px !important; /* Set this to your desired width */
+    
+    margin: 0 auto; /* Keeps it centered */
+    padding: 3rem;
+    background: var(--sl-color-bg-nav);
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.75rem;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  label { font-weight: bold; color: var(--sl-color-white); }
+  input, select {
+    padding: 0.5rem;
+    background: var(--sl-color-bg);
+    color: var(--sl-color-white);
+    border: 1px solid var(--sl-color-gray-4);
+    border-radius: 0.25rem;
+  }
+  button {
+    background: var(--sl-color-blue-low);
+    color: var(--sl-color-white);
+    padding: 0.75rem;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  button:hover { background: var(--sl-color-accent); }
+  /* This targets the calendar iframe specifically when Starlight is in dark mode */
+  :root[data-theme='dark'] iframe[src*="calendar.google.com"] {
+    filter: invert(90%) hue-rotate(180deg) brightness(1.1) contrast(0.9);
+  }
+
+  /* Optional: Make the calendar background match the nav background color */
+  .calendar-wrapper {
+    background-color: var(--sl-color-bg-nav);
+  }
+  /* Container to center everything on the page */
+  :global(.centered-dashboard) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    margin-top: 5vh;
+    padding: 0 1rem 10vh 1rem;
+  }
+
+  /* Centers the title and text */
+  :global(.section-header) {
+    text-align: center;
+  }
+
+  /* Ensures the form box stays centered and at a good width */
+  :global(.form-container) {
+    width: 100%;
+    max-width: 1000px !important;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* The container box */
+  :global(.calendar-container) {
+    width: 100%;
+    max-width: 1000px;
+    height: 700px; /* This is the height of the box */
+    background: var(--sl-color-bg-nav);
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    box-shadow: var(--sl-shadow-md);
+    display: flex; /* Added to help child elements fill space */
+  }
+
+  /* This targets the actual calendar inside the box */
+  :global(.calendar-container iframe) {
+    height: 100% !important; 
+    flex-grow: 1;
+  }
+
+  /* Dark Mode Filter */
+  :root[data-theme='dark'] :global(iframe[src*="calendar.google.com"]) {
+    filter: invert(90%) hue-rotate(180deg) brightness(1.1) contrast(0.9);
+  }
+  button.submitted {
+    background: #28a745 !important; /* A nice green */
+    cursor: default;
+  }
+</style>
+
+<script is:inline>
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzbanLw6RHsj3VHxEnR-JCUnNUx30Tmog4bx89Er4hRoaao_Blt5vwD2ONc3qKHLs4l/exec';
+
+  document.getElementById('appointmentForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      // mode: 'no-cors' allows the request to reach Google even if the browser blocks the response
+      const btn = e.target.querySelector('button');
+      btn.classList.add("submitted");
+      await fetch(WEB_APP_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify(data),
+      });
+      btn.innerText = "Booked!";
+      e.target.reset();
+      setTimeout(() => {
+        btn.classList.remove('submitted');
+        btn.innerText = 'Book Appointment'; // Match your original button text
+      }, 3000); // 3000 milliseconds = 3 seconds
+    } catch (err) {
+      alert('Error connecting to the server.');
+    }
+  });
+</script>
